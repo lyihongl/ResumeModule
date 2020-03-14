@@ -1,0 +1,13 @@
+a{
+  text-decoration: none;
+}
+a:visited{
+  color:blue;
+}
+.center-text{
+  text-align:center;
+}
+
+.top-links{
+  margin-left:4%;
+}

@@ -1,0 +1,7 @@
+{
+    "gopls":{
+        "completeUnimported": true
+    },
+    "go.useLanguageServer": true,
+    "go.autocompleteUnimportedPackages": true,
+}
