@@ -20,16 +20,16 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		a.Decode(&t)
 		fmt.Println(t)
 
-		//js, err := json.Marshal(t)
-		//if err != nil {
-		//	http.Error(w, err.Error(), http.StatusInternalServerError)
-		//	return
-		//}
+		js, err := json.Marshal(t)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
-		//w.Header().Set("Content-Type", "application/json")
-		//fmt.Println(string(js))
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Println(string(js))
 		Session.IssueValidationToken(w, t.Username)
-		//w.Write(js)
+		w.Write(js)
 	}
 }
 

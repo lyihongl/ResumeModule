@@ -27,14 +27,15 @@ func main() {
 
 	r := mux.NewRouter()
 	headers := handlers.AllowedHeaders([]string{"Accept", " Content-Type", " Content-Length", " Accept-Encoding", " X-CSRF-Token", " Authorization", " application/json"})
-	origins := handlers.AllowedOrigins([]string{"*"})
+	origins := handlers.AllowedOrigins([]string{"http://127.0.0.1:3000"})
 	methods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"})
+	credentials := handlers.AllowCredentials()
 
 	r.HandleFunc("/api/login", User.LoginHandler)
 	if prod[1] == "prod" {
 		certmagic.HTTPS([]string{"yihong.ca"}, r)
 	} else {
-		err := http.ListenAndServe(":9090", handlers.CORS(origins, headers, methods)(r)) //set listen port
+		err := http.ListenAndServe(":9090", handlers.CORS(origins, headers, methods, credentials)(r)) //set listen port
 		if err != nil {
 			log.Fatal("ListenAndServer:", err)
 		}

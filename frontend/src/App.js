@@ -3,6 +3,7 @@ import './css/App.css';
 import {LoginForm} from './Login.js';
 import { CreateAccount } from './CreateAccount.js';
 import { UsePersistedState } from './UsePersistedState.js'
+import Cookies from 'js-cookie'
 import {
   BrowserRouter as Router,
   Switch,

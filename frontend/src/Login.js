@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "./css/App.css"
+import Cookies from 'js-cookie'
 
 function handleSubmit(username, password) {
     //alert(this.state.username+" "+ this.state.password)
@@ -12,15 +13,20 @@ function handleSubmit(username, password) {
             username: username,
             password: password,
         }),
+        credentials: 'include'
     }
     fetch("http://127.0.0.1:9090/api/login", request)
         .then(
             response => {
+                console.log(response);
                 return response.json()
             }
         )
         .then((data) => {
             console.log(data)
+            console.log("cookies", Cookies.get())
+            console.log(JSON.parse(atob(Cookies.get("token").split('.')[1])))
+            //console.log(Cookies.get("token"))
         });
     //console.log(request)
 }
