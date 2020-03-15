@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './css/App.css';
 import {LoginForm} from './Login.js';
+import {Home} from './Home.js'
 import { CreateAccount } from './CreateAccount.js';
 import { UsePersistedState } from './UsePersistedState.js'
 import Cookies from 'js-cookie'
@@ -22,9 +23,14 @@ function Users() {
 
 function App() {
   //const [loginState, setLoginState] = UsePersistedState('b', 0);
-  const [loginState, setLoginState] = useState(0);
+  var ls = 0
+  if(Cookies.get("token") != null){
+    ls = 1
+  }
+  const [loginState, setLoginState] = useState(ls);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
   return (
     <div>
       <Router>
@@ -43,9 +49,16 @@ function App() {
           <Route path="/create_account">
           </Route>
           <Route path="/login">
-            {LoginForm([username, setUsername], [password, setPassword])}
+            {() => {
+              if(loginState === 1){
+                window.location.href="../"
+              } else {
+                return LoginForm([username, setUsername], [password, setPassword], setLoginState)
+              }
+            }}
           </Route>
           <Route path="/">
+            {Home(loginState)}
           </Route>
         </Switch>
       </Router>

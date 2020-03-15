@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import "./css/App.css"
 import Cookies from 'js-cookie'
 
-function handleSubmit(username, password) {
+function handleSubmit(event, username, password, loginState) {
     //alert(this.state.username+" "+ this.state.password)
+    //console.log("wtf")
     var request = {
         method: "POST",
         headers: {
@@ -25,30 +26,38 @@ function handleSubmit(username, password) {
         .then((data) => {
             console.log(data)
             console.log("cookies", Cookies.get())
-            console.log(JSON.parse(atob(Cookies.get("token").split('.')[1])))
-            //console.log(Cookies.get("token"))
+            if (Cookies.get("token") != null) {
+                console.log(JSON.parse(atob(Cookies.get("token").split('.')[1])))
+                loginState(1)
+            } else {
+                loginState(0)
+            }
         });
+        event.preventDefault()
     //console.log(request)
 }
 
-function LoginForm(username, password) {
+function LoginForm(username, password, loginState) {
     return (
         <div className="App">
-            <div>
-                Username:
-            </div>
-            <div>
-                <input type="text" onChange={(e) => { username[1](e.target.value)}}></input>
-            </div>
-            <div>
-                Password:
-            </div>
-            <div>
-                <input type="password" onChange={(e) => { password[1](e.target.value)}}></input>
-            </div>
-            <div>
-                <input type="submit" onClick={() => handleSubmit(username[0], password[0])}></input>
-            </div>
+            <form method="POST" onSubmit={(e) => handleSubmit(e, username[0], password[0], loginState)}>
+                <div>
+                    Username:
+                </div>
+                <div>
+                    <input type="text" onChange={(e) => { username[1](e.target.value) }}></input>
+                </div>
+                <div>
+                    Password:
+                </div>
+                <div>
+                    <input type="password" onChange={(e) => { password[1](e.target.value) }}></input>
+                </div>
+                <div>
+                    <input type="submit" ></input>
+                </div>
+
+            </form>
         </div>
     );
 

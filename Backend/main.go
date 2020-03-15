@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -32,6 +30,8 @@ func main() {
 	credentials := handlers.AllowCredentials()
 
 	r.HandleFunc("/api/login", User.LoginHandler)
+	r.HandleFunc("/api/get_snippets")
+
 	if prod[1] == "prod" {
 		certmagic.HTTPS([]string{"yihong.ca"}, r)
 	} else {
@@ -43,20 +43,17 @@ func main() {
 
 }
 
-type Test struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	//w.Header().Set("Access-Control-Allow-Origin", "http://127.0.0.1:3000")
-	//w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	//w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, application/json")
-	fmt.Println(r)
-	if r.Method == "POST" {
-		var t Test
-		a := json.NewDecoder(r.Body)
-		a.Decode(&t)
-		fmt.Println(t)
-	}
-}
+//type Test struct {
+//	Username string `json:"username"`
+//	Password string `json:"password"`
+//}
+//
+//func handler(w http.ResponseWriter, r *http.Request) {
+//	fmt.Println(r)
+//	if r.Method == "POST" {
+//		var t Test
+//		a := json.NewDecoder(r.Body)
+//		a.Decode(&t)
+//		fmt.Println(t)
+//	}
+//}
