@@ -1,4 +1,4 @@
-package data
+package Data
 
 import (
 	"database/sql"
@@ -7,6 +7,11 @@ import (
 	//MySql driver
 	_ "github.com/go-sql-driver/mysql"
 )
+
+type JsonResponse struct {
+	UserValid bool
+	Payload   struct{}
+}
 
 //DB connection instance to server
 var DB *sql.DB
@@ -38,5 +43,18 @@ func GetUserId(user string) int {
 	useridQuery.Next()
 	var result int
 	useridQuery.Scan(&result)
+	return result
+}
+
+func GetSnippet(uid int) []SnippetData {
+	var result []SnippetData
+	var tempResult SnippetData
+	snippet, _ := DB.Query("select * from snippet where userid=?", uid)
+	index := 0
+	for snippet.Next() {
+		snippet.Scan(&tempResult.Id, &tempResult.Uid, &tempResult.SnippetName, &tempResult.Data)
+		result = append(result, tempResult)
+		index++
+	}
 	return result
 }

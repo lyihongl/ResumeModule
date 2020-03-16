@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/lyihongl/modulify/Backend/App"
 	data "github.com/lyihongl/modulify/Backend/Data"
 	"github.com/lyihongl/modulify/Backend/User"
 	"github.com/mholt/certmagic"
@@ -30,7 +31,7 @@ func main() {
 	credentials := handlers.AllowCredentials()
 
 	r.HandleFunc("/api/login", User.LoginHandler)
-	r.HandleFunc("/api/get_snippets")
+	r.HandleFunc("/api/get_snippets", App.RetrieveSnippet)
 
 	if prod[1] == "prod" {
 		certmagic.HTTPS([]string{"yihong.ca"}, r)
