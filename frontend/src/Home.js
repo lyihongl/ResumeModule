@@ -13,7 +13,7 @@ export function Home(loginState) {
     useEffect(() => {
         if (loginState === 1) {
             setUsername(JSON.parse(atob(Cookies.get("token").split('.')[1]))['username']);
-            console.log(JSON.parse(atob(Cookies.get("token").split('.')[1])));
+            //console.log(JSON.parse(atob(Cookies.get("token").split('.')[1])));
             GetSnippetsFromDB(username).then(
                 (result) => {
                     setTableData(result) //console.log(result)
@@ -21,7 +21,9 @@ export function Home(loginState) {
             )
         }
     }, [username]);
-    console.log("table data 2", tableData)
+    //if(tableData != null){
+    //    console.log("table data 2", tableData[0]["Data"])
+    //}
 
     if (loginState === 0) {
         return (
@@ -33,7 +35,7 @@ export function Home(loginState) {
                 </div>
             </div>
         );
-    } else if (loginState === 1) {
+    } else if (loginState === 1 && tableData != null) {
         return (
             <div>
                 <Modal
@@ -43,6 +45,7 @@ export function Home(loginState) {
                     shouldCloseOnOverlayClick={true}
                 >
                     <button onClick={(e) => setShowModal(false)}>Close Modal</button>
+                    <div dangerouslySetInnerHTML={{__html: tableData[0]["Data"]}}></div>
                 </Modal>
                 <h2 className="center-text">Welcome to Resume Module</h2>
                 <div className="center-text">
@@ -77,7 +80,7 @@ export function GetSnippetsFromDB(username) {
     return fetch("http://127.0.0.1:9090/api/get_snippets", request)
         .then(
             response => {
-                console.log(response)
+                //console.log(response)
                 return response.json()
             }
         )
@@ -97,7 +100,7 @@ function renderSnippetTable(data, setShowModal) {
     if (data != null) {
         return data.map((row, index) => {
             const { Id, Uid, SnippetName, Data } = row
-            console.log(row)
+            //console.log(row)
             return (
                 <tr key={Id}>
                     <td>

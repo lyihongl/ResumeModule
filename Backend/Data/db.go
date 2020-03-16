@@ -40,9 +40,12 @@ func Init() {
 
 func GetUserId(user string) int {
 	useridQuery, _ := DB.Query("select id from users where username=?", user)
-	useridQuery.Next()
 	var result int
-	useridQuery.Scan(&result)
+	if useridQuery.Next() {
+		useridQuery.Scan(&result)
+	} else {
+		return -1
+	}
 	return result
 }
 
