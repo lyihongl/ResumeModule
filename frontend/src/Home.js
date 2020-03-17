@@ -9,7 +9,8 @@ export function Home(loginState) {
     const [snippetsFetched, setSnippetsFetched] = useState(false)
     const [tableData, setTableData] = useState(null)
     const [username, setUsername] = useState('')
-    const [showModal, setShowModal] = useState(false)
+    const [showModal, setShowModal] = useState([false, 0])
+    //const [edit, setEdit] = useState(false)
     useEffect(() => {
         if (loginState === 1) {
             setUsername(JSON.parse(atob(Cookies.get("token").split('.')[1]))['username']);
@@ -25,6 +26,7 @@ export function Home(loginState) {
     //    console.log("table data 2", tableData[0]["Data"])
     //}
 
+    //console.log("edit:", edit)
     if (loginState === 0) {
         return (
             <div>
@@ -39,13 +41,15 @@ export function Home(loginState) {
         return (
             <div>
                 <Modal
-                    isOpen={showModal}
+                    isOpen={showModal[0]}
                     contentLabel="Minimal Modal Example"
-                    onRequestClose={() => setShowModal(false)}
+                    onRequestClose={() => closeModal(setShowModal)}
                     shouldCloseOnOverlayClick={true}
                 >
-                    <button onClick={(e) => setShowModal(false)}>Close Modal</button>
-                    <div dangerouslySetInnerHTML={{__html: tableData[0]["Data"]}}></div>
+                    <button onClick={(e) => closeModal(setShowModal)}>Close</button>
+                    <button onClick={(e) => console.log("save")}>Save</button>
+                    <div dangerouslySetInnerHTML={{ __html: tableData[showModal[1]]["Data"] }}></div>
+                    {renderSnippet(tableData, setTableData, showModal[1])}
                 </Modal>
                 <h2 className="center-text">Welcome to Resume Module</h2>
                 <div className="center-text">
@@ -53,7 +57,7 @@ export function Home(loginState) {
                 </div>
                 <div className="center-text">
                     Your snippets:
-                    <table id="test">
+                    <table className="center-div" id="test">
                         <tbody className="center-text">
                             {renderSnippetTable(tableData, setShowModal)}
                         </tbody>
@@ -63,6 +67,21 @@ export function Home(loginState) {
         );
 
     }
+}
+
+function renderSnippet(data, updateData, index) {
+    return (
+        <textarea rows="20" cols="100" value={data[index]["Data"]} onChange={(e) => {
+            let dataCopy = JSON.parse(JSON.stringify(data))
+            dataCopy[index].Data = e.target.value
+            updateData(dataCopy)
+        }}>
+        </textarea>
+    );
+}
+
+function closeModal(showModal) {
+    showModal([false, 0])
 }
 
 export function GetSnippetsFromDB(username) {
@@ -104,21 +123,14 @@ function renderSnippetTable(data, setShowModal) {
             return (
                 <tr key={Id}>
                     <td>
-                        {SnippetName}
+                        {index}
                     </td>
                     <td>
-                        <a href="#" onClick={(e) => setShowModal(true)}>View</a>
-                    </td>
-                    <td>
-                        <a href="#" onClick={(e) => test({ Id })}>Edit</a>
+                        <a href="#" onClick={((e) => setShowModal([true, index]))}>{SnippetName}</a>
                     </td>
                 </tr>
             )
         })
     }
     //console.log(data.map(_data => _data))
-}
-
-function test(id) {
-    console.log(id)
 }

@@ -52,3 +52,31 @@ func IssueValidationToken(w http.ResponseWriter, Username string) {
 		Expires: expirationTime,
 	})
 }
+
+func ValidateToken(r *http.Request) (bool, string) {
+	c, err := r.Cookie("token")
+	if err != nil {
+		return false, ""
+	}
+	tknStr := c.Value
+	if err != nil {
+		return false, ""
+	}
+
+	claims := &Claims{}
+
+	tkn, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return JwtKey, nil
+	})
+
+	if tkn == nil || err != nil {
+		return false, ""
+	}
+
+	if !tkn.Valid {
+		return false, ""
+	}
+	fmt.Println("validate token username: ", claims.Username)
+
+	return true, claims.Username
+}
