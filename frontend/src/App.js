@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './css/App.css';
-import {LoginForm} from './Login.js';
-import {Home} from './Home.js'
+import { LoginForm } from './Login.js';
+import { Home } from './Home.js'
 import { CreateAccount } from './CreateAccount.js';
 import { UsePersistedState } from './UsePersistedState.js'
 import Cookies from 'js-cookie'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -14,7 +16,26 @@ import {
 
 
 function About() {
-  return <h2>About</h2>;
+  const initialData = {
+    column: {
+      id: 'column-1',
+      numberIds: ['four', 'one', 'five', 'three', 'two'],
+    },
+    numbers: {
+      'five': { id: 'five', content: '5' },
+      'four': { id: 'four', content: '4' },
+      'one': { id: 'one', content: '1' },
+      'three': { id: 'three', content: '3' },
+      'two': { id: 'two', content: '2' },
+    }
+  };
+  return (
+    <div>
+      <DragDropContext>
+
+      </DragDropContext>
+    </div>
+  );
 }
 
 function Users() {
@@ -24,7 +45,7 @@ function Users() {
 function App() {
   //const [loginState, setLoginState] = UsePersistedState('b', 0);
   var ls = 0
-  if(Cookies.get("token") != null){
+  if (Cookies.get("token") != null) {
     ls = 1
   }
   const [loginState, setLoginState] = useState(ls);
@@ -47,11 +68,12 @@ function App() {
         </ul>
         <Switch>
           <Route path="/create_account">
+            {About()}
           </Route>
           <Route path="/login">
             {() => {
-              if(loginState === 1){
-                window.location.href="../"
+              if (loginState === 1) {
+                window.location.href = "../"
               } else {
                 return LoginForm([username, setUsername], [password, setPassword], setLoginState)
               }
