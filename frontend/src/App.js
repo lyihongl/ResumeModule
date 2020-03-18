@@ -14,29 +14,66 @@ import {
   Link
 } from "react-router-dom";
 
+const getItems = count =>
+  Array.from({ length: count }, (v, k) => k).map(k => ({
+    id: `item-${k}`,
+    content: `item ${k}`
+  }));
+
+// a little function to help us with reordering the result
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
+function onDragEnd(result, itemState) {
+  if (!result.destination) {
+    return
+  }
+  const items = reorder(
+    itemState[0],
+    result.source.index,
+    result.destination.index
+  );
+  itemState[1](items)
+}
 
 function About() {
-  const initialData = {
-    column: {
-      id: 'column-1',
-      numberIds: ['four', 'one', 'five', 'three', 'two'],
-    },
-    numbers: {
-      'five': { id: 'five', content: '5' },
-      'four': { id: 'four', content: '4' },
-      'one': { id: 'one', content: '1' },
-      'three': { id: 'three', content: '3' },
-      'two': { id: 'two', content: '2' },
-    }
-  };
+  const [items, setItems] = useState(getItems(10))
   return (
     <div>
-      <DragDropContext>
-
+      <DragDropContext onDragEnd={onDragEnd([items, setItems])}>
+        <Droppable droppableId="droppable">
+          {(provided, snapshot) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {items.map((item, index) => (
+                <Draggable key={item.id} draggableId={item.id} index={index}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      {item.content}
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
       </DragDropContext>
     </div>
   );
 }
+
 
 function Users() {
   return <h2>Users</h2>;
@@ -88,56 +125,5 @@ function App() {
 
   );
 }
-
-//class App extends React.Component {
-//  constructor(props) {
-//    super(props)
-//    this.state = {
-//      page: ''
-//    }
-//  }
-//
-//
-//  About() {
-//    return <h2>About</h2>;
-//  }
-//
-//  Users() {
-//    return <h2>Users</h2>;
-//  }
-//  Home() {
-//    return (
-//      <h2 class="center-text">Welcome to Resume Module</h2>
-//    );
-//  }
-//  render() {
-//    return (
-//      <div>
-//        <Router>
-//          <ul>
-//            <li>
-//              <Link to="/">Home</Link>
-//            </li>
-//            <li>
-//              <Link to="/login">Login</Link>
-//            </li>
-//            <li>
-//              <Link to="/create_account">Create Account</Link>
-//            </li>
-//          </ul>
-//          <Switch>
-//            <Route path="/create_account">
-//              <User.CreateAccount />
-//            </Route>
-//            <Route path="/login" component={LoginForm}></Route>
-//            <Route path="/">
-//              <this.Home />
-//            </Route>
-//          </Switch>
-//        </Router>
-//      </div>
-//    );
-//  }
-//}
 
 export default App;
