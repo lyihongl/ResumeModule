@@ -44,8 +44,8 @@ function onDragEnd(result, itemState) {
 function About() {
   const [items, setItems] = useState(getItems(10))
   return (
-    <div>
-      <DragDropContext onDragEnd={onDragEnd([items, setItems])}>
+    <div className="center-div">
+      <DragDropContext onDragEnd={onDragEnd([items, setItems])} className="center-div">
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
             <div
@@ -55,7 +55,7 @@ function About() {
               {items.map((item, index) => (
                 <Draggable key={item.id} draggableId={item.id} index={index}>
                   {(provided, snapshot) => (
-                    <div
+                    <div className="center-text"
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}

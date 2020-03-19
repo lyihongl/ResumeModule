@@ -5,6 +5,10 @@ import Modal from 'react-modal'
 
 Modal.setAppElement("#root")
 
+function items(tableData){
+
+}
+
 export function Home(loginState) {
     const [snippetsFetched, setSnippetsFetched] = useState(false)
     const [tableData, setTableData] = useState(null)
