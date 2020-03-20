@@ -25,21 +25,37 @@ function genItems(tableData) {
         return null
     }
 }
-function onDragEnd(result, itemState) {
+function onDragEnd(result, lists) {
     const { source, destination } = result
     if (!destination) {
         return
     }
+    //const resultList = Array.from(lists[0])
+    var resultList = null
+    if (source.droppableId == destination.droppableId) {
+        //console.log(source.droppableId, lists)
+        const resultList = Array.from(lists[source.droppableId][0])
+        const [removed] = resultList.splice(source.index, 1)
+        resultList.splice(destination.index, 0, removed)
+        lists[source.droppableId][0] = resultList
+    } else {
+        const sourceClone = Array.from(lists[source.droppableId][0])
+        const destClone = Array.from(lists[destination.droppableId][0])
+        const [removed] = sourceClone.splice(source.index, 1)
+        destClone.splice(destination.index, 0, removed)
 
-    const resultList = Array.from(itemState[0])
-    const [removed] = resultList.splice(source.index, 1)
-    resultList.splice(destination.index, 0, removed)
+        lists[source.droppableId][0] = sourceClone
+        lists[destination.droppableId][0] = destClone
+    }
 
     //if(source.droppableId == destination.droppableId) {
     //const items = reorder()
     //}
     //[itemState[0][result.source.index], itemState[0][result.destination.index]] = [itemState[0][result.destination.index], itemState[0][result.source.index]];
-    itemState[1](resultList)
+    for (var key in lists) {
+        //console.log("key", key, lists[key][0])
+        lists[key][1](lists[key][0])
+    }
 }
 const grid = 8
 
@@ -77,12 +93,15 @@ export function Home(loginState) {
     const [username, setUsername] = useState('')
     const [showModal, setShowModal] = useState([false, 0])
     const [items, setItems] = useState(genItems(tableData))
-    const [selected, setSelected] = useState(null)
+    const [items2, setItems2] = useState([])
+    const lists = {
+        droppable: [items, setItems],
+        droppable2: [items2, setItems2]
+    }
 
     if (items === null && tableData != null) {
         setItems(genItems(tableData))
     }
-    //const [edit, setEdit] = useState(false)
     useEffect(() => {
         if (loginState === 1) {
             setUsername(JSON.parse(atob(Cookies.get("token").split('.')[1]))['username']);
@@ -94,9 +113,6 @@ export function Home(loginState) {
             )
         }
     }, [username]);
-    //if(tableData != null){
-    //    console.log("table data 2", tableData[0]["Data"])
-    //}
 
     //console.log("edit:", edit)
     if (loginState === 0) {
@@ -129,7 +145,7 @@ export function Home(loginState) {
                 </div>
                 <div className="center-text">
                     Your snippets:
-                    <DragDropContext onDragEnd={(r) => onDragEnd(r, [items, setItems])} className="center-div">
+                    <DragDropContext onDragEnd={(r) => onDragEnd(r, lists)} className="center-div">
                         <Droppable droppableId="droppable">
                             {
                                 (provided, snapshot) => (
@@ -158,7 +174,36 @@ export function Home(loginState) {
                                 )
                             }
                         </Droppable>
+                        <Droppable droppableId="droppable2">
+                            {
+                                (provided, snapshot) => (
+                                    <div {...provided.droppableProps}
+                                        ref={provided.innerRef}
+                                        style={getListStyle(snapshot.isDraggingOver)}>
+                                        {items2.map((item, index) => (
+                                            <Draggable key={item.id} draggableId={item.id} index={index}>
+                                                {(provided, snapshot) => (
+                                                    <div className="center-text"
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                        style={getItemStyle(
+                                                            snapshot.isDragging,
+                                                            provided.draggableProps.style
+                                                        )}
+                                                    >
+                                                        <a href="#" onClick={((e) => setShowModal([true, item.index]))}>{item.content}</a>
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                    </div>
+                                )
+                            }
+                        </Droppable>
                     </DragDropContext>
+
                     {/*
 
                     <table className="center-div" id="test">
