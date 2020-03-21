@@ -29,7 +29,8 @@ div[data-rbd-droppable-context-id="0"]{
 
 .css-grid{
   display: grid;
-  grid-template-columns: repeat(2, 45% [col-start]);
+  grid-template-columns: repeat(2, 50% [col-start]);
+  width: 100%;
 }
 
 .css-grid > div{

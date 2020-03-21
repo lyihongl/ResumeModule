@@ -149,7 +149,7 @@ export function Home(loginState) {
                 </div>
                 <div className="center-text">
                     Your snippets:
-                    <div className="css-grid">
+                        <div className="center-div center-text css-grid">
                         <DragDropContext onDragEnd={(r) => onDragEnd(r, lists)} className="center-div">
                             <Droppable droppableId="droppable">
                                 {
