@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './css/App.css';
 import Cookies from 'js-cookie'
 import Modal from 'react-modal'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -120,7 +119,7 @@ export function Home(loginState) {
         );
     } else if (loginState === 1 && tableData != null && items != null) {
         return (
-            <div>
+            <div className="overflow-auto">
                 <Modal
                     isOpen={showModal[0]}
                     contentLabel="Minimal Modal Example"
@@ -147,10 +146,16 @@ export function Home(loginState) {
                 <div className="center-div center-text">
                     <button onClick={() => setCreateModal(true)}> Create New Snippet</button>
                 </div>
-                <div className="center-text">
+                <div className="center-text overflow-auto">
                     Your snippets:
-                        <div className="center-div center-text css-grid">
+                        <div className="center-div center-text css-grid overflow-auto">
                         <DragDropContext onDragEnd={(r) => onDragEnd(r, lists)} className="center-div">
+                            <div>
+                                Your experiences
+                            </div>
+                            <div>
+                                Export list
+                            </div>
                             <Droppable droppableId="droppable">
                                 {
                                     (provided, snapshot) => (
