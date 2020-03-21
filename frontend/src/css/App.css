@@ -4,6 +4,10 @@ a{
 a:visited{
   color:blue;
 }
+
+a[class="dnd-link"]{
+  color:white;
+}
 .center-text{
   text-align:center;
 }
@@ -21,6 +25,22 @@ div[data-rbd-droppable-context-id="0"]{
   margin-top:1%;
   margin-left:auto;
   margin-right:auto;
+}
+
+.css-grid{
+  display: grid;
+  grid-template-columns: repeat(2, 45% [col-start]);
+}
+
+.css-grid > div{
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 20px 0;
+  font-size: 30px;
+}
+
+div[class="css-grid"]{
+
 }
 
 table {

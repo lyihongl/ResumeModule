@@ -59,14 +59,6 @@ function onDragEnd(result, lists) {
 }
 const grid = 8
 
-
-//TEST AREA
-
-
-
-
-// ===========
-
 const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: 'none',
@@ -88,10 +80,11 @@ const getListStyle = isDraggingOver => ({
 });
 
 export function Home(loginState) {
-    const [snippetsFetched, setSnippetsFetched] = useState(false)
+    //const [snippetsFetched, setSnippetsFetched] = useState(false)
     const [tableData, setTableData] = useState(null)
     const [username, setUsername] = useState('')
     const [showModal, setShowModal] = useState([false, 0])
+    const [createModal, setCreateModal] = useState(false)
     const [items, setItems] = useState(genItems(tableData))
     const [items2, setItems2] = useState([])
     const lists = {
@@ -139,70 +132,84 @@ export function Home(loginState) {
                     <div dangerouslySetInnerHTML={{ __html: tableData[showModal[1]]["Data"] }}></div>
                     {renderSnippet(tableData, setTableData, showModal[1])}
                 </Modal>
+                <Modal
+                    isOpen={createModal}
+                    onRequestClose={() => setCreateModal(false)}
+                    shouldCloseOnOverlayClick={true}
+                >
+                    <button onClick={() => setCreateModal(false)}>Close</button>
+                    {createSnippet()}
+                </Modal>
                 <h2 className="center-text">Welcome to Resume Module</h2>
                 <div className="center-text">
                     Welcome {username}
                 </div>
+                <div className="center-div center-text">
+                    <button onClick={() => setCreateModal(true)}> Create New Snippet</button>
+                </div>
                 <div className="center-text">
                     Your snippets:
-                    <DragDropContext onDragEnd={(r) => onDragEnd(r, lists)} className="center-div">
-                        <Droppable droppableId="droppable">
-                            {
-                                (provided, snapshot) => (
-                                    <div {...provided.droppableProps}
-                                        ref={provided.innerRef}
-                                        style={getListStyle(snapshot.isDraggingOver)}>
-                                        {items.map((item, index) => (
-                                            <Draggable key={item.id} draggableId={item.id} index={index}>
-                                                {(provided, snapshot) => (
-                                                    <div className="center-text"
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                        style={getItemStyle(
-                                                            snapshot.isDragging,
-                                                            provided.draggableProps.style
-                                                        )}
-                                                    >
-                                                        <a href="#" onClick={((e) => setShowModal([true, item.index]))}>{item.content}</a>
-                                                    </div>
-                                                )}
-                                            </Draggable>
-                                        ))}
-                                        {provided.placeholder}
-                                    </div>
-                                )
-                            }
-                        </Droppable>
-                        <Droppable droppableId="droppable2">
-                            {
-                                (provided, snapshot) => (
-                                    <div {...provided.droppableProps}
-                                        ref={provided.innerRef}
-                                        style={getListStyle(snapshot.isDraggingOver)}>
-                                        {items2.map((item, index) => (
-                                            <Draggable key={item.id} draggableId={item.id} index={index}>
-                                                {(provided, snapshot) => (
-                                                    <div className="center-text"
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                        style={getItemStyle(
-                                                            snapshot.isDragging,
-                                                            provided.draggableProps.style
-                                                        )}
-                                                    >
-                                                        <a href="#" onClick={((e) => setShowModal([true, item.index]))}>{item.content}</a>
-                                                    </div>
-                                                )}
-                                            </Draggable>
-                                        ))}
-                                        {provided.placeholder}
-                                    </div>
-                                )
-                            }
-                        </Droppable>
-                    </DragDropContext>
+                    <div className="css-grid">
+                        <DragDropContext onDragEnd={(r) => onDragEnd(r, lists)} className="center-div">
+                            <Droppable droppableId="droppable">
+                                {
+                                    (provided, snapshot) => (
+                                        <div {...provided.droppableProps}
+                                            ref={provided.innerRef}
+                                            style={getListStyle(snapshot.isDraggingOver)}>
+                                            {items.map((item, index) => (
+                                                <Draggable key={item.id} draggableId={item.id} index={index}>
+                                                    {(provided, snapshot) => (
+                                                        <div className="center-text"
+                                                            ref={provided.innerRef}
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
+                                                            style={getItemStyle(
+                                                                snapshot.isDragging,
+                                                                provided.draggableProps.style
+                                                            )}
+                                                        >
+                                                            <a className="dnd-link" href="#" onClick={((e) => setShowModal([true, item.index]))}>{item.content}</a>
+                                                        </div>
+                                                    )}
+                                                </Draggable>
+                                            ))}
+                                            {provided.placeholder}
+                                        </div>
+                                    )
+                                }
+                            </Droppable>
+                            <Droppable droppableId="droppable2">
+                                {
+                                    (provided, snapshot) => (
+                                        <div {...provided.droppableProps}
+                                            ref={provided.innerRef}
+                                            style={getListStyle(snapshot.isDraggingOver)}>
+                                            {items2.map((item, index) => (
+                                                <Draggable key={item.id} draggableId={item.id} index={index}>
+                                                    {(provided, snapshot) => (
+                                                        <div className="center-text"
+                                                            ref={provided.innerRef}
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
+                                                            style={getItemStyle(
+                                                                snapshot.isDragging,
+                                                                provided.draggableProps.style
+                                                            )}
+                                                        >
+                                                            <a href="#" className="dnd-link" onClick={((e) => setShowModal([true, item.index]))}>{item.content}</a>
+                                                        </div>
+                                                    )}
+                                                </Draggable>
+                                            ))}
+                                            {provided.placeholder}
+                                        </div>
+                                    )
+                                }
+                            </Droppable>
+                        </DragDropContext>
+                    </div>
+
 
                     {/*
 
@@ -276,26 +283,36 @@ export function GetSnippetsFromDB(username) {
         .catch(() => console.log("wow"))
 }
 
-function handleOpenModal(setShowModal) {
-    setShowModal(true)
-}
+//function renderSnippetTable(data, setShowModal) {
+//    if (data != null) {
+//        return data.map((row, index) => {
+//            const { Id, Uid, SnippetName, Data } = row
+//            //console.log(row)
+//            return (
+//                <tr key={Id}>
+//                    <td>
+//                        {index}
+//                    </td>
+//                    <td>
+//                        <a href="#" onClick={((e) => setShowModal([true, index]))}>{SnippetName}</a>
+//                    </td>
+//                </tr>
+//            )
+//        })
+//    }
+//}
 
-function renderSnippetTable(data, setShowModal) {
-    if (data != null) {
-        return data.map((row, index) => {
-            const { Id, Uid, SnippetName, Data } = row
-            //console.log(row)
-            return (
-                <tr key={Id}>
-                    <td>
-                        {index}
-                    </td>
-                    <td>
-                        <a href="#" onClick={((e) => setShowModal([true, index]))}>{SnippetName}</a>
-                    </td>
-                </tr>
-            )
-        })
-    }
-    //console.log(data.map(_data => _data))
+function createSnippet() {
+    return (
+        <div>
+            <div>
+                Create New Snippet
+            </div>
+            <label>Title:</label>
+            <input type="text"></input>
+            <div>
+                <textarea rows="20" cols="100"></textarea>
+            </div>
+        </div>
+    );
 }
