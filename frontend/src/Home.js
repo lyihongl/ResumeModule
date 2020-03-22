@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie'
 import Modal from 'react-modal'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import endpoint from './EndPoint.js'
 
 Modal.setAppElement("#root")
 
@@ -119,15 +120,15 @@ export function Home(loginState) {
         );
     } else if (loginState === 1 && tableData != null && items != null) {
         return (
-            <div className="overflow-auto">
+            <div className="">
                 <Modal
                     isOpen={showModal[0]}
                     contentLabel="Minimal Modal Example"
                     onRequestClose={() => closeModal(setShowModal)}
                     shouldCloseOnOverlayClick={true}
                 >
-                    <button onClick={(e) => closeModal(setShowModal)}>Close</button>
-                    <button onClick={(e) => console.log("save")}>Save</button>
+                    <button onClick={() => closeModal(setShowModal)}>Close</button>
+                    <button onClick={() => saveModal(tableData, showModal[1])}>Save</button>
                     <div dangerouslySetInnerHTML={{ __html: tableData[showModal[1]]["Data"] }}></div>
                     {renderSnippet(tableData, setTableData, showModal[1])}
                 </Modal>
@@ -146,9 +147,9 @@ export function Home(loginState) {
                 <div className="center-div center-text">
                     <button onClick={() => setCreateModal(true)}> Create New Snippet</button>
                 </div>
-                <div className="center-text overflow-auto">
+                <div className="center-text">
                     Your snippets:
-                        <div className="center-div center-text css-grid overflow-auto">
+                        <div className="center-div center-text css-grid">
                         <DragDropContext onDragEnd={(r) => onDragEnd(r, lists)} className="center-div">
                             <div>
                                 Your experiences
@@ -273,7 +274,7 @@ export function GetSnippetsFromDB(username) {
         }),
         credentials: 'include'
     }
-    return fetch("http://127.0.0.1:9090/api/get_snippets", request)
+    return fetch(endpoint+"/api/get_snippets", request)
         .then(
             response => {
                 //console.log(response)
@@ -320,4 +321,25 @@ function createSnippet() {
             </div>
         </div>
     );
+}
+
+function saveModal(tableData, index){
+    //console.log("table data", tableData[index])
+    var request = {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }, body: JSON.stringify(
+            tableData[index]
+        )
+    }
+    console.log(request)
+    fetch(endpoint+"/api/save_snippet", request)
+    .then(
+        response => {
+            console.log(response);
+            return response.json()
+        }
+    )
 }

@@ -90,7 +90,7 @@ function App() {
   const [password, setPassword] = useState('');
 
   return (
-    <div className="overflow-auto height-100">
+    <div className="height-100">
       <Router>
         <ul>
           <li>

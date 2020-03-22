@@ -32,6 +32,7 @@ func main() {
 
 	r.HandleFunc("/api/login", User.LoginHandler)
 	r.HandleFunc("/api/get_snippets", App.RetrieveSnippet)
+	r.HandleFunc("/api/save_snippet", App.SaveSnippet)
 
 	if prod[1] == "prod" {
 		certmagic.HTTPS([]string{"yihong.ca"}, r)

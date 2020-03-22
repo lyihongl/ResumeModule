@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import "./css/App.css"
 import Cookies from 'js-cookie'
+import endpoint from './EndPoint.js'
 
 function handleSubmit(event, username, password, loginState) {
     //alert(this.state.username+" "+ this.state.password)
@@ -16,7 +17,7 @@ function handleSubmit(event, username, password, loginState) {
         }),
         credentials: 'include'
     }
-    fetch("http://127.0.0.1:9090/api/login", request)
+    fetch(endpoint+"/api/login", request)
         .then(
             response => {
                 console.log(response);
