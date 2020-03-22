@@ -332,14 +332,15 @@ function saveModal(tableData, index){
             'Content-Type': 'application/json',
         }, body: JSON.stringify(
             tableData[index]
-        )
+        ),
+        credentials: 'include'
     }
     console.log(request)
     fetch(endpoint+"/api/save_snippet", request)
     .then(
         response => {
             console.log(response);
-            return response.json()
+            //return response.json()
         }
     )
 }
