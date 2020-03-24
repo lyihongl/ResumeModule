@@ -105,7 +105,7 @@ function App() {
         </ul>
         <Switch>
           <Route path="/create_account">
-            {About()}
+            {CreateAccount()}
           </Route>
           <Route path="/login">
             {() => {

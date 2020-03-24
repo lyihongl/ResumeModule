@@ -21,7 +21,7 @@ a[class="dnd-link"]{
   margin-right: auto;
 }
 
-div[data-rbd-droppable-context-id="0"]{
+div[data-rbd-droppable-context-id]{
   margin-top:1%;
   margin-left:auto;
   margin-right:auto;
